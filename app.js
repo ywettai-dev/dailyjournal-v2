@@ -3,6 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
+const _ = require('lodash');
 const port = 3000;
 
 let posts = [];
@@ -34,6 +35,38 @@ app.get('/', (req, res) => {
     homePosts: posts
   });
 
+});
+
+//Express route params to postDetail
+app.get('/posts/:postName', (req, res) => {
+
+  const reqName = req.params.postName;
+
+  const lowerCaseReqName = _.lowerCase(reqName);
+
+  posts.forEach(post => {
+
+    const postInAry = post.title;
+
+    const lowerCasePost = _.lowerCase(postInAry);
+
+    if (lowerCasePost === lowerCaseReqName) {
+
+      const postTitle = post.title;
+
+      const postContent = post.content;
+
+      res.render('post', {
+        title: postTitle,
+        content: postContent
+      });
+
+    } else {
+
+      console.log(`Not a match!`);
+
+    }
+  });
 
 });
 
